@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duo Dynamo Team Maker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .input-screen {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        
+        .teams-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            z-index: 10;
+            padding: 20px;
+            display: none;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            text-align: center;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .player-input {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        input {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: rgba(255,255,255,0.9);
+            width: 100%;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        button {
+            background: #FF6B6B;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            min-width: 120px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        button.secondary {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .teams-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .team {
+            background: rgba(255,255,255,0.15);
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        
+        .team h2 {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .players {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .player {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 12px;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background: #a777e3;
+            border-radius: 50%;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        
+        .close-teams {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                max-width: 500px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="input-screen">
+            <h1>Duo Dynamo Team Maker</h1>
+            <p style="text-align: center; margin-bottom: 20px;">Create perfect team pairs!</p>
+            
+            <div class="player-input">
+                <input type="text" id="player1" placeholder="Player 1" autocomplete="off">
+                <input type="text" id="player2" placeholder="Player 2" autocomplete="off">
+                <input type="text" id="player3" placeholder="Player 3" autocomplete="off">
+                <input type="text" id="player4" placeholder="Player 4" autocomplete="off">
+                <input type="text" id="player5" placeholder="Player 5" autocomplete="off">
+                <input type="text" id="player6" placeholder="Player 6" autocomplete="off">
+                <input type="text" id="player7" placeholder="Additional Player 1" autocomplete="off" value="Gove">
+                <input type="text" id="player8" placeholder="Additional Player 2" autocomplete="off">
+            </div>
+            
+            <div class="button-group">
+                <button onclick="generateTeams()">Make Teams</button>
+                <button class="secondary" onclick="randomize()">Shuffle Players</button>
+            </div>
+        </div>
+        
+        <div class="teams-screen" id="teamsScreen">
+            <div class="close-teams" onclick="closeTeams()">×</div>
+            <h1>Your Teams</h1>
+            
+            <div class="teams-container" id="teamsContainer">
+                <!-- Teams will be inserted here -->
+            </div>
+            
+            <button style="margin-top: 20px;" onclick="closeTeams()">Back to Input</button>
+        </div>
+    </div>
+
+    <script>
+        function generateTeams() {
+            // Get all player names
+            const players = [];
+            for (let i = 1; i <= 8; i++) {
+                const player = document.getElementById(`player${i}`).value || `Player ${i}`;
+                players.push(player);
+            }
+            
+            // Create teams based on rules
+            const team1 = [players[0], players[2]]; // 1 + 3
+            const team2 = [players[1], players[4]]; // 2 + 5
+            const team3 = [players[3], players[5]]; // 4 + 6
+            const extras = [players[6], players[7]]; // Additional players
+            
+            // Generate team HTML
+            const teamsContainer = document.getElementById('teamsContainer');
+            teamsContainer.innerHTML = `
+                <div class="team">
+                    <h2>Team Alpha</h2>
+                    <div class="players">
+                        <div class="player">
+                            <div class="avatar">${team1[0].charAt(0).toUpperCase()}</div>
+                            <span>${team1[0]}</span>
+                        </div>
+                        <div class="player">
+                            <div class="avatar">${team1[1].charAt(0).toUpperCase()}</div>
+                            <span>${team1[1]}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team">
+                    <h2>Team Bravo</h2>
+                    <div class="players">
+                        <div class="player">
+                            <div class="avatar">${team2[0].charAt(0).toUpperCase()}</div>
+                            <span>${team2[0]}</span>
+                        </div>
+                        <div class="player">
+                            <div class="avatar">${team2[1].charAt(0).toUpperCase()}</div>
+                            <span>${team2[1]}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team">
+                    <h2>Team Charlie</h2>
+                    <div class="players">
+                        <div class="player">
+                            <div class="avatar">${team3[0].charAt(0).toUpperCase()}</div>
+                            <span>${team3[0]}</span>
+                        </div>
+                        <div class="player">
+                            <div class="avatar">${team3[1].charAt(0).toUpperCase()}</div>
+                            <span>${team3[1]}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team">
+                    <h2>Extra Players</h2>
+                    <div class="players">
+                        <div class="player">
+                            <div class="avatar">${extras[0].charAt(0).toUpperCase()}</div>
+                            <span>${extras[0]}</span>
+                        </div>
+                        <div class="player">
+                            <div class="avatar">${extras[1].charAt(0).toUpperCase()}</div>
+                            <span>${extras[1]}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Show full-screen teams
+            document.getElementById('teamsScreen').style.display = 'flex';
+        }
+        
+        function closeTeams() {
+            document.getElementById('teamsScreen').style.display = 'none';
+        }
+        
+        function randomize() {
+            // Get all player inputs
+            const inputs = [];
+            for (let i = 1; i <= 8; i++) {
+                inputs.push(document.getElementById(`player${i}`));
+            }
+            
+            // Get current values
+            const values = inputs.map(input => input.value);
+            
+            // Shuffle values
+            for (let i = values.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [values[i], values[j]] = [values[j], values[i]];
+            }
+            
+            // Assign shuffled values back
+            inputs.forEach((input, index) => {
+                input.value = values[index];
+            });
+        }
+    </script>
+</body>
+</html>
