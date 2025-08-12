@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <title>DemoTrade — OlympTrade-style (Design by Srisanth) — WORKING</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#0f0f13;
@@ -17,54 +18,73 @@
     font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   }
   html,body{height:100%;margin:0;background:linear-gradient(180deg,#0b0b0f 0%, #0f0f13 100%);color:var(--white);-webkit-font-smoothing:antialiased;}
-  .app{max-width:420px;margin:0 auto;height:100vh;display:flex;flex-direction:column;gap:10px;padding:10px 6px;box-sizing:border-box;}
+  .app{max-width:980px;margin:0 auto;height:100vh;display:flex;flex-direction:column;gap:10px;padding:10px;box-sizing:border-box;}
   /* header */
-  .topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015));border-radius:10px}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015));border-radius:12px}
   .left{display:flex;align-items:center;gap:10px}
-  .avatar{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#233,#345);display:flex;align-items:center;justify-content:center;font-weight:600}
+  .logo{width:40px;height:40px;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f1724,#10243a)}
+  .logo img{width:100%;height:100%;object-fit:cover;display:block}
   .balance{display:flex;flex-direction:column;line-height:1}
   .balance .big{font-size:18px;font-weight:700}
   .balance .small{font-size:12px;color:var(--muted)}
   .right-controls{display:flex;align-items:center;gap:8px}
   .chip{background:var(--glass);padding:6px 8px;border-radius:8px;font-size:13px}
   .timeframe{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:6px 8px;border-radius:8px;font-weight:600}
+
   /* chart area */
   .chart-wrap{flex:1;display:flex;flex-direction:column;gap:8px}
   .chart-top{display:flex;align-items:center;justify-content:space-between;padding:0 6px}
   .instrument{display:flex;align-items:center;gap:8px}
-  .instrument .icon{width:40px;height:30px;border-radius:6px;background:linear-gradient(180deg,#2b2f35,#212327);display:inline-flex;align-items:center;justify-content:center;font-weight:700}
-  .chart-container{background:var(--panel);border-radius:10px;padding:10px;position:relative;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,0.6)}
-  #chart{width:100%;height:100%;min-height:260px;border-radius:6px;display:block;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);}
-  .y-axis{position:absolute;right:8px;top:10px;bottom:10px;display:flex;flex-direction:column;justify-content:space-between;color:var(--muted);font-size:12px;pointer-events:none}
-  .countdown{position:absolute;left:50%;transform:translateX(-50%);bottom:10px;background:rgba(0,0,0,0.55);padding:6px 10px;border-radius:20px;font-weight:700}
+  .instrument .icon{width:44px;height:30px;border-radius:6px;background:linear-gradient(180deg,#2b2f35,#212327);display:inline-flex;align-items:center;justify-content:center;font-weight:700}
+  .chart-container{background:var(--panel);border-radius:12px;padding:8px;position:relative;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,0.6)}
+  #chart{width:100%;height:100%;min-height:300px;border-radius:8px;display:block;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);}
+  .y-axis{position:absolute;right:8px;top:14px;bottom:14px;display:flex;flex-direction:column;justify-content:space-between;color:var(--muted);font-size:12px;pointer-events:none}
+  .countdown{position:absolute;left:50%;transform:translateX(-50%);bottom:12px;background:rgba(0,0,0,0.55);padding:6px 10px;border-radius:20px;font-weight:700;z-index:5}
   .watermark{position:absolute;left:12px;bottom:12px;font-size:11px;color:rgba(255,255,255,0.12)}
+  .view-controls{position:absolute;right:12px;top:12px;display:flex;gap:6px;z-index:6}
+  .small-btn{background:rgba(255,255,255,0.02);padding:6px 8px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer}
+
   /* bottom panel (fixed time mode) */
-  .bet-panel{display:flex;flex-direction:column;gap:10px;padding:8px;background:linear-gradient(180deg, rgba(0,0,0,0.15), transparent);border-radius:12px}
+  .bet-panel{display:flex;flex-direction:column;gap:10px;padding:10px;background:linear-gradient(180deg, rgba(0,0,0,0.12), transparent);border-radius:12px}
   .bet-row{display:flex;gap:8px;align-items:center}
   .bet-controls{flex:1;display:flex;gap:8px;align-items:center}
-  .selector{background:var(--glass-2);padding:8px 10px;border-radius:8px;font-weight:700}
+  .selector{background:var(--glass-2);padding:8px 10px;border-radius:8px;font-weight:700;display:flex;gap:6px}
   .stake{display:flex;align-items:center;gap:8px;background:var(--glass-2);padding:8px;border-radius:8px}
-  .stake input{background:transparent;border:0;color:var(--white);width:70px;font-weight:700;font-size:16px;outline:none}
+  .stake input{background:transparent;border:0;color:var(--white);width:90px;font-weight:700;font-size:16px;outline:none}
   .btn{flex:1;padding:14px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;cursor:pointer;user-select:none}
   .btn.up{background:linear-gradient(180deg,#1fbf5c,#17964a);color:#00150c}
   .btn.down{background:linear-gradient(180deg,#ff8a8a,#ff5c5c);color:#2a0404}
-  .center-clock{width:56px;height:56px;border-radius:10px;background:var(--panel);display:flex;align-items:center;justify-content:center;font-weight:700}
+  .center-clock{width:64px;height:56px;border-radius:12px;background:var(--panel);display:flex;align-items:center;justify-content:center;font-weight:700}
+
   /* small */
   .small-muted{font-size:12px;color:var(--muted)}
-  .trade-history{max-height:90px;overflow:auto;padding:6px;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01));font-size:13px}
+  .trade-history{max-height:120px;overflow:auto;padding:8px;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01));font-size:13px}
   .toast{position:fixed;left:50%;transform:translateX(-50%);top:18px;background:rgba(0,0,0,0.75);padding:8px 14px;border-radius:8px;z-index:1000;backdrop-filter:blur(6px)}
-  .tf-btn{background:transparent;border:0;color:var(--white);font-weight:700;padding:6px 8px;border-radius:6px;cursor:pointer;opacity:0.6}
+  .tf-btn{background:transparent;border:0;color:var(--white);font-weight:700;padding:8px 10px;border-radius:8px;cursor:pointer;opacity:0.7}
   .tf-btn.active{opacity:1;border:1px solid rgba(255,255,255,0.03)}
-  @media(min-width:600px){ .app{max-width:900px;padding:14px; } .chart-container{min-height:380px} }
+  .reset-view{font-size:12px;padding:6px;border-radius:8px}
+
+  @media(max-width:520px){
+    .app{padding:8px;gap:8px}
+    .chart-container{padding:6px}
+    .balance .big{font-size:16px}
+    .center-clock{width:56px;height:56px}
+    #chart{min-height:260px}
+    .stake input{width:64px}
+    .trade-history{max-height:80px}
+  }
 </style>
 </head>
 <body>
 <div class="app" id="app">
   <div class="topbar">
     <div class="left">
-      <div class="avatar">SG</div>
+      <div class="logo" title="DS Logo">
+        <!-- place your logo image named ds-logo.png in the same folder -->
+        <img src="ds-logo.png" alt="DS Logo" onerror="this.style.display='none'">
+      </div>
       <div class="balance">
-        <div class="big" id="balance">Đ7,666.00</div>
+        <div class="big" id="balance">₹10,000.00</div>
         <div class="small" id="accType">Demo account</div>
       </div>
     </div>
@@ -88,6 +108,10 @@
 
     <div class="chart-container" id="chartBox" role="region" aria-label="Candlestick chart">
       <canvas id="chart"></canvas>
+      <div class="view-controls">
+        <button class="small-btn" id="resetView" title="Reset view">Reset</button>
+        <button class="small-btn" id="fitRight" title="Go to live">Live</button>
+      </div>
       <div class="y-axis" id="yAxis"></div>
       <div class="countdown" id="countdown">00:00</div>
       <div class="watermark">Design by Srisanth</div>
@@ -105,18 +129,18 @@
         <div class="selector" id="modeBox">Fixed Time mode</div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end">
-        <div class="small-muted">Profit: <span id="profitPreview">+Đ0.00</span></div>
+        <div class="small-muted">Profit: <span id="profitPreview">+₹0.00</span></div>
         <div class="small-muted">Payout: <strong>1.9×</strong></div>
       </div>
     </div>
 
     <div class="bet-row" style="align-items:center;">
       <div class="stake">
-        <span class="small-muted">Đ</span>
+        <span class="small-muted">₹</span>
         <input id="stakeInput" type="number" inputmode="numeric" value="1" min="0.1" step="0.1" />
         <div style="display:flex;flex-direction:column;font-size:12px;color:var(--muted);margin-left:8px">
           <div>Balance</div>
-          <div id="balanceSmall">Đ7,666.00</div>
+          <div id="balanceSmall">₹10.000.00</div>
         </div>
       </div>
 
@@ -153,12 +177,14 @@
   const toastWrap = document.getElementById('toastWrap');
   const tfButtons = document.querySelectorAll('.tf-btn');
   const tickIndicator = document.getElementById('tickIndicator');
+  const resetViewBtn = document.getElementById('resetView');
+  const fitRightBtn = document.getElementById('fitRight');
 
   // ====== state ======
   let DPR = Math.max(1, window.devicePixelRatio || 1);
   let w=0,h=0, ctx;
   let candles = []; // {t (ms), o, h, l, c}
-  const candleDurationSec = 5; // candle = 5s (tick tickInterval)
+  const candleDurationSec = 5; // candle = 5s
   const tickInterval = 5000; // 5s update
   let lastPrice = 5878.13;
   let running=true;
@@ -167,9 +193,12 @@
   const betList = []; // {id,dir,stake,entryPrice,placedAt,expiry,settled,exitPrice}
   let idCounter=1;
   let selectedBetTimeSec = 120; // default 2m
+
   // visual controls
-  let visibleCount = 80;
-  let scaleX = 1;
+  let visibleCount = 80;     // number of candles visible on screen when zoom = 1
+  let scaleX = 1;           // zoom multiplier (lower => more candles)
+  let panOffset = 0;        // how many candles from right (0 = live)
+  const panMax = () => Math.max(0, candles.length - 10);
 
   // ====== canvas sizing ======
   function resize(){
@@ -199,7 +228,7 @@
   // ====== build initial candles ======
   function buildInitial(){
     candles = [];
-    const count = 400;
+    const count = 800;
     let t = nowFloorMs(Date.now(), candleDurationSec) - (count-1) * candleDurationSec*1000;
     let p = lastPrice;
     for(let i=0;i<count;i++){
@@ -217,10 +246,8 @@
 
   // ====== tick: produce a new candle every candleDurationSec (5s) ======
   function produceTick(){
-    // produce a new candle based on lastPrice
     const now = Date.now();
     const start = nowFloorMs(now, candleDurationSec);
-    // previous last candle close
     const prev = candles[candles.length-1];
     let open = prev ? prev.c : lastPrice;
     let close = +(randWalk(open, 0.002)).toFixed(5);
@@ -228,18 +255,20 @@
     let low = Math.min(open, close) * (1 - Math.random()*0.0015);
     const c = {t: start, o:+open.toFixed(5), h:+high.toFixed(5), l:+low.toFixed(5), c:+close.toFixed(5)};
     candles.push(c);
-    if(candles.length > 2000) candles.splice(0, candles.length-2000);
+    if(candles.length > 5000) candles.splice(0, candles.length-5000);
     lastPrice = c.c;
 
-    // settle bets whose expiry <= now (use lastPrice at expiry)
+    // settle bets whose expiry <= now (use candle at or after expiry)
     for(const b of betList.filter(x=>!x.settled && x.expiry <= now)){
-      // settle with the price at or after expiry.
-      // find earliest candle with t >= b.expiry - candleDurationSec*1000
-      const idx = candles.findIndex(x => x.t >= (Math.floor(b.expiry/1000/candleDurationSec)*candleDurationSec*1000));
+      const indexTime = Math.floor(b.expiry/1000/candleDurationSec) * candleDurationSec * 1000;
+      const idx = candles.findIndex(x => x.t >= indexTime);
       const settleC = idx>=0 ? candles[idx] : candles[candles.length-1];
       b.exitPrice = settleC.c;
       settleBet(b);
     }
+
+    // if we're at live view, keep panOffset = 0 (auto-follow)
+    if(panOffset === 0) panOffset = 0;
 
     draw();
     updateUI();
@@ -261,11 +290,10 @@
     let rem = Math.max(0, Math.floor((nextCandleStart - now)/1000));
     const mm = String(Math.floor(rem/60)).padStart(2,'0');
     const ss = String(rem%60).padStart(2,'0');
-    // also show active bet expiry info if exists (nearest expiry)
+
     let extra = '';
     const active = betList.filter(b=>!b.settled);
     if(active.length){
-      // show nearest expiry
       const nextExpiry = Math.min(...active.map(b=>b.expiry));
       const r2 = Math.max(0, Math.floor((nextExpiry - now)/1000));
       const mm2 = String(Math.floor(r2/60)).padStart(2,'0');
@@ -303,7 +331,6 @@
   function settleBet(b){
     b.settled = true;
     b.settledAt = Date.now();
-    // determine win/lose: up if exit > entry
     let win = false;
     if(b.dir === 'up') win = b.exitPrice > b.entryPrice;
     else win = b.exitPrice < b.entryPrice;
@@ -334,8 +361,7 @@
   }
 
   function renderHistory(){
-    // show active bets optionally as top items (keeps historyList limited)
-    // We'll keep existing DOM history as-is; active bets shown as markers on chart
+    // history DOM is managed by addHistory; we could add active bets preview here later
   }
 
   function toast(msg, type='info'){
@@ -353,16 +379,18 @@
     if(!ctx) return;
     ctx.clearRect(0,0,w,h);
     // layout paddings
-    const rightPadding = 60;
-    const leftPadding = 6;
-    const topPadding = 8;
-    const bottomPadding = 28;
+    const rightPadding = 80;
+    const leftPadding = 12;
+    const topPadding = 12;
+    const bottomPadding = 36;
     const plotW = w - leftPadding - rightPadding;
     const plotH = h - topPadding - bottomPadding;
 
-    // compute visible slice
-    const count = Math.max(20, Math.round(visibleCount * scaleX));
-    const arr = candles.slice(-count);
+    // compute visible slice using scaleX and panOffset
+    const count = Math.max(20, Math.round(visibleCount * (1/scaleX)));
+    let endIndex = candles.length - panOffset;
+    let startIndex = Math.max(0, endIndex - count);
+    const arr = candles.slice(startIndex, endIndex);
     if(arr.length === 0) return;
 
     // price range
@@ -382,8 +410,8 @@
     ctx.stroke();
 
     // draw candles
-    const step = plotW / count;
-    const candleW = Math.max(3, step * 0.6);
+    const step = plotW / Math.max(1, arr.length);
+    const candleW = Math.max(2, Math.min(18, step * 0.6));
     for(let i=0;i<arr.length;i++){
       const c = arr[i];
       const x = leftPadding + i * step + step/2;
@@ -412,10 +440,6 @@
       }
     }
 
-    // price median line
-    ctx.fillStyle = 'rgba(255,255,255,0.06)';
-    ctx.fillRect(0, topPadding + plotH/2 - 0.5, w, 1);
-
     // y-axis labels
     yAxis.innerHTML = '';
     for(let i=0;i<5;i++){
@@ -428,20 +452,18 @@
     }
 
     // draw active bet markers & expiry lines
-    const now = Date.now();
     for(const b of betList.filter(x=>!x.settled)){
-      // find index of candle that contained the moment when bet was placed (nearest)
-      // find the candle with t <= placedAt and t >= placedAt - candleDurationSec*1000
-      const placedIdx = Math.max(0, arr.findIndex(c => c.t >= nowFloorMs(b.placedAt, candleDurationSec)));
+      // find index of candle closest to placedAt inside arr
+      const placedIdx = arr.findIndex(c => c.t >= nowFloorMs(b.placedAt, candleDurationSec));
       const i = placedIdx >= 0 ? placedIdx : arr.length-1;
       const x = leftPadding + i * step + step/2;
       // marker
       ctx.fillStyle = (b.dir==='up') ? 'rgba(34,197,94,0.95)' : 'rgba(255,107,107,0.95)';
       ctx.beginPath();
-      ctx.arc(x, topPadding + 12, 6, 0, Math.PI*2);
+      ctx.arc(x, topPadding + 14, 6, 0, Math.PI*2);
       ctx.fill();
 
-      // expiry vertical line: find index of candle at expiry time (or rightmost)
+      // expiry vertical line
       const expiryIdx = arr.findIndex(c => c.t >= nowFloorMs(b.expiry, candleDurationSec));
       const xexp = expiryIdx>=0 ? (leftPadding + expiryIdx * step + step/2) : (leftPadding + (arr.length-1) * step + step/2);
       ctx.strokeStyle = 'rgba(255,255,255,0.08)';
@@ -483,19 +505,92 @@
   document.getElementById('tf5m').addEventListener('click', ()=>setBetTime(300));
   setBetTime(120);
 
-  // zoom with wheel
+  // zoom with wheel (ctrl+wheel for zoom on desktop; plain wheel pan)
   canvas.addEventListener('wheel', (ev)=>{
     ev.preventDefault();
-    if(ev.deltaY < 0) scaleX = Math.max(0.6, scaleX * 0.9);
-    else scaleX = Math.min(3, scaleX * 1.1);
+    // if ctrl pressed, zoom
+    if(ev.ctrlKey || ev.metaKey){
+      if(ev.deltaY < 0) { scaleX = Math.max(0.4, scaleX * 0.92); }
+      else { scaleX = Math.min(3, scaleX * 1.08); }
+      // clamp pan
+      panOffset = Math.min(panOffset, panMax());
+    } else {
+      // horizontal wheel or vertical wheel => pan back/forward
+      if(ev.deltaY > 0) panOffset = Math.min(panMax(), panOffset + Math.round(Math.abs(ev.deltaY)/60));
+      else panOffset = Math.max(0, panOffset - Math.round(Math.abs(ev.deltaY)/60));
+    }
     draw();
   }, {passive:false});
 
-  // pointer pan (simple)
-  let isPanning=false, lastPanX=0;
-  canvas.addEventListener('pointerdown', (e)=>{ isPanning=true; lastPanX = e.clientX; canvas.setPointerCapture && canvas.setPointerCapture(e.pointerId); });
-  canvas.addEventListener('pointermove', (e)=>{ if(!isPanning) return; const dx = e.clientX - lastPanX; lastPanX = e.clientX; /* offset not used now */ });
-  canvas.addEventListener('pointerup', (e)=>{ isPanning=false; try{ canvas.releasePointerCapture && canvas.releasePointerCapture(e.pointerId); }catch(e){} });
+  // pointer pan and pinch-to-zoom (supports multiple pointers)
+  const pointers = new Map();
+  let isPanning=false, lastPanX=0, lastDistance = null;
+  canvas.addEventListener('pointerdown', (e)=>{
+    canvas.setPointerCapture && canvas.setPointerCapture(e.pointerId);
+    pointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
+    if(pointers.size === 1){
+      isPanning = true;
+      lastPanX = e.clientX;
+      lastDistance = null;
+    } else if(pointers.size === 2){
+      // start pinch
+      const pts = Array.from(pointers.values());
+      lastDistance = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+    }
+  });
+  canvas.addEventListener('pointermove', (e)=>{
+    if(!pointers.has(e.pointerId)) return;
+    pointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
+    if(pointers.size === 1 && isPanning){
+      const dx = e.clientX - lastPanX;
+      lastPanX = e.clientX;
+      // convert dx to candle pan (positive dx => move view left => newer => decrease panOffset)
+      const panStep = Math.max(1, Math.round(Math.abs(dx) / 8));
+      if(dx < 0) panOffset = Math.min(panMax(), panOffset + panStep);
+      else panOffset = Math.max(0, panOffset - panStep);
+      draw();
+    } else if(pointers.size === 2){
+      const pts = Array.from(pointers.values());
+      const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+      if(lastDistance){
+        const ratio = dist / lastDistance;
+        if(ratio > 1.02) scaleX = Math.max(0.4, scaleX * 0.98);
+        else if(ratio < 0.98) scaleX = Math.min(3, scaleX * 1.02);
+        lastDistance = dist;
+        panOffset = Math.min(panOffset, panMax());
+        draw();
+      } else lastDistance = dist;
+    }
+  });
+  canvas.addEventListener('pointerup', (e)=>{
+    pointers.delete(e.pointerId);
+    isPanning = pointers.size > 0;
+    lastDistance = null;
+    try{ canvas.releasePointerCapture && canvas.releasePointerCapture(e.pointerId); }catch(e){}
+  });
+  canvas.addEventListener('pointercancel', (e)=>{ pointers.delete(e.pointerId); isPanning = pointers.size > 0; lastDistance = null; });
+
+  // quick view controls
+  resetViewBtn.addEventListener('click', ()=>{
+    scaleX = 1;
+    panOffset = 0;
+    draw();
+  });
+  fitRightBtn.addEventListener('click', ()=>{
+    panOffset = 0;
+    draw();
+  });
+
+  // double-tap to go live (mobile)
+  let lastTap = 0;
+  canvas.addEventListener('touchend', (e)=>{
+    const now = Date.now();
+    if(now - lastTap < 300){
+      panOffset = 0;
+      draw();
+    }
+    lastTap = now;
+  }, {passive:true});
 
   // initial draw & UI
   draw();
