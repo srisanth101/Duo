@@ -1,317 +1,513 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Duo Dynamo Team Maker</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #6e8efb, #a777e3);
-            color: white;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-        
-        .container {
-            width: 100%;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        
-        .input-screen {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-        }
-        
-        .teams-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #6e8efb, #a777e3);
-            z-index: 10;
-            padding: 20px;
-            display: none;
-            flex-direction: column;
-            overflow-y: auto;
-        }
-        
-        h1 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-            text-align: center;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        
-        .player-input {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin: 20px 0;
-        }
-        
-        input {
-            padding: 15px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            background: rgba(255,255,255,0.9);
-            width: 100%;
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin: 15px 0;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        button {
-            background: #FF6B6B;
-            color: white;
-            border: none;
-            padding: 15px 25px;
-            border-radius: 50px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            flex: 1;
-            min-width: 120px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-        }
-        
-        button.secondary {
-            background: rgba(255,255,255,0.2);
-        }
-        
-        .teams-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            margin-top: 20px;
-        }
-        
-        .team {
-            background: rgba(255,255,255,0.15);
-            border-radius: 15px;
-            padding: 20px;
-            transition: all 0.3s;
-            backdrop-filter: blur(10px);
-        }
-        
-        .team h2 {
-            text-align: center;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-        }
-        
-        .players {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .player {
-            display: flex;
-            align-items: center;
-            background: rgba(255,255,255,0.2);
-            border-radius: 10px;
-            padding: 12px;
-        }
-        
-        .avatar {
-            width: 40px;
-            height: 40px;
-            background: #a777e3;
-            border-radius: 50%;
-            margin-right: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.1rem;
-            flex-shrink: 0;
-        }
-        
-        .close-teams {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-        
-        @media (min-width: 768px) {
-            .container {
-                max-width: 500px;
-                margin: 0 auto;
-            }
-        }
-    </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>DemoTrade — OlympTrade-style (Design by Srisanth) — WORKING</title>
+<style>
+  :root{
+    --bg:#0f0f13;
+    --panel:#111217;
+    --muted:#8a8f98;
+    --accent:#22c55e;
+    --danger:#ff6b6b;
+    --glass: rgba(255,255,255,0.03);
+    --white: #eef2f6;
+    --glass-2: rgba(255,255,255,0.02);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+  html,body{height:100%;margin:0;background:linear-gradient(180deg,#0b0b0f 0%, #0f0f13 100%);color:var(--white);-webkit-font-smoothing:antialiased;}
+  .app{max-width:420px;margin:0 auto;height:100vh;display:flex;flex-direction:column;gap:10px;padding:10px 6px;box-sizing:border-box;}
+  /* header */
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015));border-radius:10px}
+  .left{display:flex;align-items:center;gap:10px}
+  .avatar{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#233,#345);display:flex;align-items:center;justify-content:center;font-weight:600}
+  .balance{display:flex;flex-direction:column;line-height:1}
+  .balance .big{font-size:18px;font-weight:700}
+  .balance .small{font-size:12px;color:var(--muted)}
+  .right-controls{display:flex;align-items:center;gap:8px}
+  .chip{background:var(--glass);padding:6px 8px;border-radius:8px;font-size:13px}
+  .timeframe{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:6px 8px;border-radius:8px;font-weight:600}
+  /* chart area */
+  .chart-wrap{flex:1;display:flex;flex-direction:column;gap:8px}
+  .chart-top{display:flex;align-items:center;justify-content:space-between;padding:0 6px}
+  .instrument{display:flex;align-items:center;gap:8px}
+  .instrument .icon{width:40px;height:30px;border-radius:6px;background:linear-gradient(180deg,#2b2f35,#212327);display:inline-flex;align-items:center;justify-content:center;font-weight:700}
+  .chart-container{background:var(--panel);border-radius:10px;padding:10px;position:relative;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,0.6)}
+  #chart{width:100%;height:100%;min-height:260px;border-radius:6px;display:block;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);}
+  .y-axis{position:absolute;right:8px;top:10px;bottom:10px;display:flex;flex-direction:column;justify-content:space-between;color:var(--muted);font-size:12px;pointer-events:none}
+  .countdown{position:absolute;left:50%;transform:translateX(-50%);bottom:10px;background:rgba(0,0,0,0.55);padding:6px 10px;border-radius:20px;font-weight:700}
+  .watermark{position:absolute;left:12px;bottom:12px;font-size:11px;color:rgba(255,255,255,0.12)}
+  /* bottom panel (fixed time mode) */
+  .bet-panel{display:flex;flex-direction:column;gap:10px;padding:8px;background:linear-gradient(180deg, rgba(0,0,0,0.15), transparent);border-radius:12px}
+  .bet-row{display:flex;gap:8px;align-items:center}
+  .bet-controls{flex:1;display:flex;gap:8px;align-items:center}
+  .selector{background:var(--glass-2);padding:8px 10px;border-radius:8px;font-weight:700}
+  .stake{display:flex;align-items:center;gap:8px;background:var(--glass-2);padding:8px;border-radius:8px}
+  .stake input{background:transparent;border:0;color:var(--white);width:70px;font-weight:700;font-size:16px;outline:none}
+  .btn{flex:1;padding:14px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;cursor:pointer;user-select:none}
+  .btn.up{background:linear-gradient(180deg,#1fbf5c,#17964a);color:#00150c}
+  .btn.down{background:linear-gradient(180deg,#ff8a8a,#ff5c5c);color:#2a0404}
+  .center-clock{width:56px;height:56px;border-radius:10px;background:var(--panel);display:flex;align-items:center;justify-content:center;font-weight:700}
+  /* small */
+  .small-muted{font-size:12px;color:var(--muted)}
+  .trade-history{max-height:90px;overflow:auto;padding:6px;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01));font-size:13px}
+  .toast{position:fixed;left:50%;transform:translateX(-50%);top:18px;background:rgba(0,0,0,0.75);padding:8px 14px;border-radius:8px;z-index:1000;backdrop-filter:blur(6px)}
+  .tf-btn{background:transparent;border:0;color:var(--white);font-weight:700;padding:6px 8px;border-radius:6px;cursor:pointer;opacity:0.6}
+  .tf-btn.active{opacity:1;border:1px solid rgba(255,255,255,0.03)}
+  @media(min-width:600px){ .app{max-width:900px;padding:14px; } .chart-container{min-height:380px} }
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="input-screen">
-            <h1>Duo Dynamo Team Maker</h1>
-            <p style="text-align: center; margin-bottom: 20px;">Create perfect team pairs!</p>
-            
-            <div class="player-input">
-                <input type="text" id="player1" placeholder="Player 1" autocomplete="off">
-                <input type="text" id="player2" placeholder="Player 2" autocomplete="off">
-                <input type="text" id="player3" placeholder="Player 3" autocomplete="off">
-                <input type="text" id="player4" placeholder="Player 4" autocomplete="off">
-                <input type="text" id="player5" placeholder="Player 5" autocomplete="off">
-                <input type="text" id="player6" placeholder="Player 6" autocomplete="off">
-                <input type="text" id="player7" placeholder="Additional Player 1" autocomplete="off">
-                <input type="text" id="player8" placeholder="Additional Player 2" autocomplete="off">
-            </div>
-            
-            <div class="button-group">
-                <button onclick="generateTeams()">Make Teams</button>
-                <button class="secondary" onclick="randomize()">Shuffle Players</button>
-            </div>
+<div class="app" id="app">
+  <div class="topbar">
+    <div class="left">
+      <div class="avatar">SG</div>
+      <div class="balance">
+        <div class="big" id="balance">Đ7,666.00</div>
+        <div class="small" id="accType">Demo account</div>
+      </div>
+    </div>
+    <div class="right-controls">
+      <div class="chip instrument-select" id="instrumentChip">Asia Composite • <span style="color:var(--accent)">85%</span></div>
+      <div class="timeframe" id="tickIndicator">5s</div>
+    </div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-top">
+      <div class="instrument">
+        <div class="icon">AC</div>
+        <div>
+          <div style="font-weight:700">Asia Composite</div>
+          <div class="small-muted" id="priceLabel">--</div>
         </div>
-        
-        <div class="teams-screen" id="teamsScreen">
-            <div class="close-teams" onclick="closeTeams()">×</div>
-            <h1>Your Teams</h1>
-            
-            <div class="teams-container" id="teamsContainer">
-                <!-- Teams will be inserted here -->
-            </div>
-            
-            <button style="margin-top: 20px;" onclick="closeTeams()">Back to Input</button>
-        </div>
+      </div>
+      <div class="small-muted">Design by Srisanth</div>
     </div>
 
-    <script>
-        function generateTeams() {
-            // Get all player names
-            const players = [];
-            for (let i = 1; i <= 8; i++) {
-                const player = document.getElementById(`player${i}`).value || `Player ${i}`;
-                players.push(player);
-            }
-            
-            // Create teams based on rules
-            const team1 = [players[0], players[2]]; // 1 + 3
-            const team2 = [players[1], players[4]]; // 2 + 5
-            const team3 = [players[3], players[5]]; // 4 + 6
-            const extras = [players[6], players[7]]; // Additional players
-            
-            // Generate team HTML
-            const teamsContainer = document.getElementById('teamsContainer');
-            teamsContainer.innerHTML = `
-                <div class="team">
-                    <h2>Team Alpha</h2>
-                    <div class="players">
-                        <div class="player">
-                            <div class="avatar">${team1[0].charAt(0).toUpperCase()}</div>
-                            <span>${team1[0]}</span>
-                        </div>
-                        <div class="player">
-                            <div class="avatar">${team1[1].charAt(0).toUpperCase()}</div>
-                            <span>${team1[1]}</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="team">
-                    <h2>Team Bravo</h2>
-                    <div class="players">
-                        <div class="player">
-                            <div class="avatar">${team2[0].charAt(0).toUpperCase()}</div>
-                            <span>${team2[0]}</span>
-                        </div>
-                        <div class="player">
-                            <div class="avatar">${team2[1].charAt(0).toUpperCase()}</div>
-                            <span>${team2[1]}</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="team">
-                    <h2>Team Charlie</h2>
-                    <div class="players">
-                        <div class="player">
-                            <div class="avatar">${team3[0].charAt(0).toUpperCase()}</div>
-                            <span>${team3[0]}</span>
-                        </div>
-                        <div class="player">
-                            <div class="avatar">${team3[1].charAt(0).toUpperCase()}</div>
-                            <span>${team3[1]}</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="team">
-                    <h2>Extra Players</h2>
-                    <div class="players">
-                        <div class="player">
-                            <div class="avatar">${extras[0].charAt(0).toUpperCase()}</div>
-                            <span>${extras[0]}</span>
-                        </div>
-                        <div class="player">
-                            <div class="avatar">${extras[1].charAt(0).toUpperCase()}</div>
-                            <span>${extras[1]}</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            // Show full-screen teams
-            document.getElementById('teamsScreen').style.display = 'flex';
-        }
-        
-        function closeTeams() {
-            document.getElementById('teamsScreen').style.display = 'none';
-        }
-        
-        function randomize() {
-            // Get all player inputs
-            const inputs = [];
-            for (let i = 1; i <= 8; i++) {
-                inputs.push(document.getElementById(`player${i}`));
-            }
-            
-            // Get current values
-            const values = inputs.map(input => input.value);
-            
-            // Shuffle values
-            for (let i = values.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [values[i], values[j]] = [values[j], values[i]];
-            }
-            
-            // Assign shuffled values back
-            inputs.forEach((input, index) => {
-                input.value = values[index];
-            });
-        }
-    </script>
+    <div class="chart-container" id="chartBox" role="region" aria-label="Candlestick chart">
+      <canvas id="chart"></canvas>
+      <div class="y-axis" id="yAxis"></div>
+      <div class="countdown" id="countdown">00:00</div>
+      <div class="watermark">Design by Srisanth</div>
+    </div>
+  </div>
+
+  <div class="bet-panel">
+    <div class="bet-row">
+      <div class="bet-controls">
+        <div class="selector" style="display:flex;gap:6px;align-items:center">
+          <button id="tf1m" class="tf-btn" data-sec="60">1m</button>
+          <button id="tf2m" class="tf-btn active" data-sec="120">2m</button>
+          <button id="tf5m" class="tf-btn" data-sec="300">5m</button>
+        </div>
+        <div class="selector" id="modeBox">Fixed Time mode</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end">
+        <div class="small-muted">Profit: <span id="profitPreview">+Đ0.00</span></div>
+        <div class="small-muted">Payout: <strong>1.9×</strong></div>
+      </div>
+    </div>
+
+    <div class="bet-row" style="align-items:center;">
+      <div class="stake">
+        <span class="small-muted">Đ</span>
+        <input id="stakeInput" type="number" inputmode="numeric" value="1" min="0.1" step="0.1" />
+        <div style="display:flex;flex-direction:column;font-size:12px;color:var(--muted);margin-left:8px">
+          <div>Balance</div>
+          <div id="balanceSmall">Đ7,666.00</div>
+        </div>
+      </div>
+
+      <div style="width:12px"></div>
+
+      <div class="btn down" id="betDown">Down ↓</div>
+      <div style="width:8px"></div>
+      <div class="center-clock" id="clockBtn">2m</div>
+      <div style="width:8px"></div>
+      <div class="btn up" id="betUp">Up ↑</div>
+    </div>
+
+    <div class="trade-history" id="history">
+      <strong>Bet History</strong>
+      <div id="historyList"></div>
+    </div>
+  </div>
+</div>
+
+<div id="toastWrap" style="pointer-events:none"></div>
+
+<script>
+(function(){
+  // ====== DOM refs ======
+  const canvas = document.getElementById('chart');
+  const box = document.getElementById('chartBox');
+  const yAxis = document.getElementById('yAxis');
+  const countdown = document.getElementById('countdown');
+  const priceLabel = document.getElementById('priceLabel');
+  const balanceEl = document.getElementById('balance');
+  const balanceSmall = document.getElementById('balanceSmall');
+  const stakeInput = document.getElementById('stakeInput');
+  const historyList = document.getElementById('historyList');
+  const toastWrap = document.getElementById('toastWrap');
+  const tfButtons = document.querySelectorAll('.tf-btn');
+  const tickIndicator = document.getElementById('tickIndicator');
+
+  // ====== state ======
+  let DPR = Math.max(1, window.devicePixelRatio || 1);
+  let w=0,h=0, ctx;
+  let candles = []; // {t (ms), o, h, l, c}
+  const candleDurationSec = 5; // candle = 5s (tick tickInterval)
+  const tickInterval = 5000; // 5s update
+  let lastPrice = 5878.13;
+  let running=true;
+  let balance = 7666.00;
+  let payout = 1.9;
+  const betList = []; // {id,dir,stake,entryPrice,placedAt,expiry,settled,exitPrice}
+  let idCounter=1;
+  let selectedBetTimeSec = 120; // default 2m
+  // visual controls
+  let visibleCount = 80;
+  let scaleX = 1;
+
+  // ====== canvas sizing ======
+  function resize(){
+    DPR = Math.max(1, window.devicePixelRatio || 1);
+    w = box.clientWidth;
+    h = box.clientHeight;
+    canvas.width = Math.floor(w * DPR);
+    canvas.height = Math.floor(h * DPR);
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    ctx = canvas.getContext('2d');
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    draw();
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  // ====== helpers ======
+  function nowFloorMs(ms, sec){
+    return Math.floor(ms/1000/sec) * sec * 1000;
+  }
+  function randWalk(p, volatility=0.002){
+    const rnd = (Math.random()-0.5) * 2 * volatility;
+    return +(p * (1 + rnd));
+  }
+
+  // ====== build initial candles ======
+  function buildInitial(){
+    candles = [];
+    const count = 400;
+    let t = nowFloorMs(Date.now(), candleDurationSec) - (count-1) * candleDurationSec*1000;
+    let p = lastPrice;
+    for(let i=0;i<count;i++){
+      let open = p;
+      let close = +(randWalk(open, 0.002)).toFixed(5);
+      let high = +(Math.max(open,close) * (1 + Math.random()*0.0012)).toFixed(5);
+      let low = +(Math.min(open,close) * (1 - Math.random()*0.0012)).toFixed(5);
+      candles.push({t: t, o: +open.toFixed(5), h: high, l: low, c: close});
+      p = close;
+      t += candleDurationSec*1000;
+    }
+    lastPrice = candles[candles.length-1].c;
+  }
+  buildInitial();
+
+  // ====== tick: produce a new candle every candleDurationSec (5s) ======
+  function produceTick(){
+    // produce a new candle based on lastPrice
+    const now = Date.now();
+    const start = nowFloorMs(now, candleDurationSec);
+    // previous last candle close
+    const prev = candles[candles.length-1];
+    let open = prev ? prev.c : lastPrice;
+    let close = +(randWalk(open, 0.002)).toFixed(5);
+    let high = Math.max(open, close) * (1 + Math.random()*0.0015);
+    let low = Math.min(open, close) * (1 - Math.random()*0.0015);
+    const c = {t: start, o:+open.toFixed(5), h:+high.toFixed(5), l:+low.toFixed(5), c:+close.toFixed(5)};
+    candles.push(c);
+    if(candles.length > 2000) candles.splice(0, candles.length-2000);
+    lastPrice = c.c;
+
+    // settle bets whose expiry <= now (use lastPrice at expiry)
+    for(const b of betList.filter(x=>!x.settled && x.expiry <= now)){
+      // settle with the price at or after expiry.
+      // find earliest candle with t >= b.expiry - candleDurationSec*1000
+      const idx = candles.findIndex(x => x.t >= (Math.floor(b.expiry/1000/candleDurationSec)*candleDurationSec*1000));
+      const settleC = idx>=0 ? candles[idx] : candles[candles.length-1];
+      b.exitPrice = settleC.c;
+      settleBet(b);
+    }
+
+    draw();
+    updateUI();
+  }
+
+  // run tick every 5s
+  setInterval(()=>{ if(running) produceTick(); }, tickInterval);
+
+  // ====== UI updates ======
+  function updateUI(){
+    priceLabel.textContent = lastPrice.toFixed(2);
+    balanceEl.textContent = 'Đ' + balance.toFixed(2);
+    balanceSmall.textContent = 'Đ' + balance.toFixed(2);
+    tickIndicator.textContent = candleDurationSec + 's';
+
+    // countdown to next candle
+    const now = Date.now();
+    const nextCandleStart = nowFloorMs(now, candleDurationSec) + candleDurationSec*1000;
+    let rem = Math.max(0, Math.floor((nextCandleStart - now)/1000));
+    const mm = String(Math.floor(rem/60)).padStart(2,'0');
+    const ss = String(rem%60).padStart(2,'0');
+    // also show active bet expiry info if exists (nearest expiry)
+    let extra = '';
+    const active = betList.filter(b=>!b.settled);
+    if(active.length){
+      // show nearest expiry
+      const nextExpiry = Math.min(...active.map(b=>b.expiry));
+      const r2 = Math.max(0, Math.floor((nextExpiry - now)/1000));
+      const mm2 = String(Math.floor(r2/60)).padStart(2,'0');
+      const ss2 = String(r2%60).padStart(2,'0');
+      extra = ' • next bet: ' + mm2 + ':' + ss2;
+    }
+    countdown.textContent = mm + ':' + ss + extra;
+
+    renderHistory();
+  }
+  // update every 1s for countdown
+  setInterval(()=>{ if(running) updateUI(); }, 1000);
+
+  // ====== Bets ======
+  let placeDisabled = false;
+  function placeBet(dir){
+    if(placeDisabled) return;
+    const stake = Math.max(0.01, parseFloat(stakeInput.value) || 0);
+    if(stake > balance){ toast('Insufficient balance'); return; }
+    if(stake <= 0){ toast('Enter stake'); return; }
+    const entry = lastPrice;
+    const placedAt = Date.now();
+    const betExpiry = placedAt + selectedBetTimeSec*1000;
+    const bet = { id: idCounter++, dir, stake, entryPrice: entry, placedAt, expiry: betExpiry, settled:false };
+    balance -= stake; // hold stake
+    betList.push(bet);
+    toast('Bet placed: ' + (dir==='up'?'UP':'DOWN') + ' Đ' + stake.toFixed(2));
+    // briefly disable to prevent double click spam
+    placeDisabled = true;
+    setTimeout(()=> placeDisabled = false, 600);
+    updateUI();
+    draw();
+  }
+
+  function settleBet(b){
+    b.settled = true;
+    b.settledAt = Date.now();
+    // determine win/lose: up if exit > entry
+    let win = false;
+    if(b.dir === 'up') win = b.exitPrice > b.entryPrice;
+    else win = b.exitPrice < b.entryPrice;
+    if(b.exitPrice === b.entryPrice) win = false;
+    if(win){
+      const payoutAmt = b.stake * payout;
+      balance += payoutAmt;
+      toast('WIN Đ' + (payoutAmt - b.stake).toFixed(2), 'win');
+      addHistory(b, true);
+    } else {
+      toast('LOSS Đ' + b.stake.toFixed(2), 'loss');
+      addHistory(b, false);
+    }
+    updateUI();
+    draw();
+  }
+
+  function addHistory(b, win){
+    const el = document.createElement('div');
+    el.style.display='flex';
+    el.style.justifyContent='space-between';
+    el.style.padding='6px 0';
+    el.style.borderBottom='1px solid rgba(255,255,255,0.02)';
+    el.innerHTML = '<div style="color:'+ (b.dir==='up'? 'var(--accent)':'var(--danger)') +';font-weight:700">'+ (b.dir==='up'?'UP':'DOWN') +'</div>' +
+                   '<div style="color:var(--muted)">'+ new Date(b.placedAt).toLocaleTimeString() +'</div>' +
+                   '<div style="font-weight:700">'+ (win? ('+Đ' + ((b.stake*payout)-b.stake).toFixed(2)) : ('-Đ' + b.stake.toFixed(2))) +'</div>';
+    historyList.prepend(el);
+  }
+
+  function renderHistory(){
+    // show active bets optionally as top items (keeps historyList limited)
+    // We'll keep existing DOM history as-is; active bets shown as markers on chart
+  }
+
+  function toast(msg, type='info'){
+    const el = document.createElement('div');
+    el.className='toast';
+    el.style.background = type==='win' ? 'linear-gradient(180deg, rgba(20,80,30,0.95), rgba(5,40,10,0.9))' : (type==='loss' ? 'linear-gradient(180deg, rgba(80,20,20,0.95), rgba(40,5,5,0.9))' : 'rgba(0,0,0,0.75)');
+    el.style.color = '#fff';
+    el.textContent = msg;
+    toastWrap.appendChild(el);
+    setTimeout(()=>{ el.style.transition='opacity 400ms'; el.style.opacity='0'; setTimeout(()=>el.remove(),450); }, 1800);
+  }
+
+  // ====== chart draw ======
+  function draw(){
+    if(!ctx) return;
+    ctx.clearRect(0,0,w,h);
+    // layout paddings
+    const rightPadding = 60;
+    const leftPadding = 6;
+    const topPadding = 8;
+    const bottomPadding = 28;
+    const plotW = w - leftPadding - rightPadding;
+    const plotH = h - topPadding - bottomPadding;
+
+    // compute visible slice
+    const count = Math.max(20, Math.round(visibleCount * scaleX));
+    const arr = candles.slice(-count);
+    if(arr.length === 0) return;
+
+    // price range
+    let minP = Infinity, maxP = -Infinity;
+    for(const c of arr){ minP = Math.min(minP, c.l); maxP = Math.max(maxP, c.h); }
+    const pad = (maxP - minP) * 0.12 || Math.max(0.5, maxP*0.001);
+    minP -= pad; maxP += pad;
+
+    // draw horizontal grid lines
+    ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for(let i=0;i<5;i++){
+      const y = topPadding + (i/4)*plotH;
+      ctx.moveTo(leftPadding, y); ctx.lineTo(leftPadding+plotW, y);
+    }
+    ctx.stroke();
+
+    // draw candles
+    const step = plotW / count;
+    const candleW = Math.max(3, step * 0.6);
+    for(let i=0;i<arr.length;i++){
+      const c = arr[i];
+      const x = leftPadding + i * step + step/2;
+      const oy = topPadding + (1 - (c.o - minP)/(maxP-minP)) * plotH;
+      const cy = topPadding + (1 - (c.c - minP)/(maxP-minP)) * plotH;
+      const hy = topPadding + (1 - (c.h - minP)/(maxP-minP)) * plotH;
+      const ly = topPadding + (1 - (c.l - minP)/(maxP-minP)) * plotH;
+
+      // wick
+      ctx.strokeStyle = (c.c >= c.o) ? 'rgba(34,197,94,0.95)' : 'rgba(255,107,107,0.95)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(x, hy);
+      ctx.lineTo(x, ly);
+      ctx.stroke();
+
+      // body
+      const top = Math.min(oy, cy);
+      const height = Math.max(1, Math.abs(oy-cy));
+      if(c.c >= c.o){
+        ctx.fillStyle = 'rgba(34,197,94,0.95)';
+        ctx.fillRect(x - candleW/2, top, candleW, height);
+      } else {
+        ctx.fillStyle = 'rgba(255,107,107,0.95)';
+        ctx.fillRect(x - candleW/2, top, candleW, height);
+      }
+    }
+
+    // price median line
+    ctx.fillStyle = 'rgba(255,255,255,0.06)';
+    ctx.fillRect(0, topPadding + plotH/2 - 0.5, w, 1);
+
+    // y-axis labels
+    yAxis.innerHTML = '';
+    for(let i=0;i<5;i++){
+      const val = (maxP - (i/4)*(maxP-minP));
+      const node = document.createElement('div');
+      node.style.padding = '2px 6px';
+      node.style.textAlign = 'right';
+      node.textContent = val.toFixed(2);
+      yAxis.appendChild(node);
+    }
+
+    // draw active bet markers & expiry lines
+    const now = Date.now();
+    for(const b of betList.filter(x=>!x.settled)){
+      // find index of candle that contained the moment when bet was placed (nearest)
+      // find the candle with t <= placedAt and t >= placedAt - candleDurationSec*1000
+      const placedIdx = Math.max(0, arr.findIndex(c => c.t >= nowFloorMs(b.placedAt, candleDurationSec)));
+      const i = placedIdx >= 0 ? placedIdx : arr.length-1;
+      const x = leftPadding + i * step + step/2;
+      // marker
+      ctx.fillStyle = (b.dir==='up') ? 'rgba(34,197,94,0.95)' : 'rgba(255,107,107,0.95)';
+      ctx.beginPath();
+      ctx.arc(x, topPadding + 12, 6, 0, Math.PI*2);
+      ctx.fill();
+
+      // expiry vertical line: find index of candle at expiry time (or rightmost)
+      const expiryIdx = arr.findIndex(c => c.t >= nowFloorMs(b.expiry, candleDurationSec));
+      const xexp = expiryIdx>=0 ? (leftPadding + expiryIdx * step + step/2) : (leftPadding + (arr.length-1) * step + step/2);
+      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+      ctx.setLineDash([4,6]);
+      ctx.beginPath();
+      ctx.moveTo(xexp, topPadding);
+      ctx.lineTo(xexp, topPadding + plotH);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // current price label on right
+    ctx.font = '600 12px Inter, sans-serif';
+    const pTxt = lastPrice.toFixed(2);
+    const txtW = ctx.measureText(pTxt).width;
+    const labelW = txtW + 18;
+    const labelX = w - rightPadding + 8;
+    ctx.fillStyle = 'rgba(255,255,255,0.95)';
+    ctx.fillRect(labelX, topPadding + plotH/2 - 14, labelW, 28);
+    ctx.fillStyle = '#000';
+    ctx.fillText(pTxt, labelX + 9, topPadding + plotH/2 + 5);
+  }
+
+  // ====== UI events ======
+  document.getElementById('betUp').addEventListener('click', ()=>placeBet('up'));
+  document.getElementById('betDown').addEventListener('click', ()=>placeBet('down'));
+
+  // timeframe buttons (1m/2m/5m)
+  function setBetTime(sec){
+    selectedBetTimeSec = sec;
+    document.getElementById('clockBtn').textContent = (sec>=60? (sec/60)+'m' : sec+'s');
+    tfButtons.forEach(b => {
+      b.classList.remove('active');
+      if(parseInt(b.dataset.sec,10) === sec) b.classList.add('active');
+    });
+  }
+  document.getElementById('tf1m').addEventListener('click', ()=>setBetTime(60));
+  document.getElementById('tf2m').addEventListener('click', ()=>setBetTime(120));
+  document.getElementById('tf5m').addEventListener('click', ()=>setBetTime(300));
+  setBetTime(120);
+
+  // zoom with wheel
+  canvas.addEventListener('wheel', (ev)=>{
+    ev.preventDefault();
+    if(ev.deltaY < 0) scaleX = Math.max(0.6, scaleX * 0.9);
+    else scaleX = Math.min(3, scaleX * 1.1);
+    draw();
+  }, {passive:false});
+
+  // pointer pan (simple)
+  let isPanning=false, lastPanX=0;
+  canvas.addEventListener('pointerdown', (e)=>{ isPanning=true; lastPanX = e.clientX; canvas.setPointerCapture && canvas.setPointerCapture(e.pointerId); });
+  canvas.addEventListener('pointermove', (e)=>{ if(!isPanning) return; const dx = e.clientX - lastPanX; lastPanX = e.clientX; /* offset not used now */ });
+  canvas.addEventListener('pointerup', (e)=>{ isPanning=false; try{ canvas.releasePointerCapture && canvas.releasePointerCapture(e.pointerId); }catch(e){} });
+
+  // initial draw & UI
+  draw();
+  updateUI();
+
+  // expose for debugging
+  window._demo = {candles, placeBet, settleBet, draw, toast, betList};
+
+  // bootstrap: produce an immediate tick to show live movement
+  produceTick();
+
+})();
+</script>
 </body>
 </html>
